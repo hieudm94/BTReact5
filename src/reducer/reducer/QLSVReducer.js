@@ -2,7 +2,14 @@
 
 const initialState = {
   mangSV: [
-    
+    {maSV: "0001",
+    hoTen: "Nguyễn Thị Học Sinh",
+    sdt: "0123456",
+    email: "tets1@gmail.com"},
+    {maSV: "0002",
+    hoTen: "Nguyễn Tiến Lên",
+    sdt: "0123456",
+    email: "tets2@gmail.com"}
    
   ],
   sinhVienChiTiet: {
@@ -12,9 +19,7 @@ const initialState = {
     email: ""
   },
 
-  sinhVienTim:{
-    maSV:"",
-  }
+  sinhVienTim: []
 }
 
 
@@ -54,13 +59,24 @@ export const QLSVReducer = (state = initialState, action) => {
        state.mangSV = [...state.mangSV];
       return {...state}
 
-      case "TIM_MA_SV" :
-      console.log(action.timMaSV)
+      case "TIM_TEN_SV" :
+    
+      let tuKhoaTimKiemThuong = action.timTenSV.toLowerCase()
 
-      state.mangSV = state.mangSV.filter((sv) => { 
-        return sv.maSV !== action.timMaSV
-       })
+      let mangSVTim = []
 
+       state.mangSV.map((sv) => { 
+          let tenSVMangSV = sv.hoTen.toLowerCase()
+          let viTriTK = tenSVMangSV.indexOf(tuKhoaTimKiemThuong)
+          if(viTriTK !== -1){
+            mangSVTim.push(sv);
+          }
+        })
+        state.sinhVienTim = mangSVTim
+
+        console.log("test",state.sinhVienTim)
+        state.sinhVienTim = [...state.sinhVienTim]
+      
       return {...state}
 
 

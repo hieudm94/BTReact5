@@ -19,9 +19,7 @@ class FormSV extends Component {
       sdt: "",
       email: ""
     },
-    find:{
-      timSV:"",
-    }
+   
   }
 
   inputChange = (event) => {
@@ -34,13 +32,28 @@ class FormSV extends Component {
     let newErrors = {...this.state.errors};
     let errorMsg = "";
     
+    // Kiểm tra rỗng
     if(value.trim() == ""){
       errorMsg = "Nội không để trống!";
     }
 
+   
+
     newErrors[name] = errorMsg;
 
     let typeVal = event.target.getAttribute("typeinput");
+
+    // Kiểm tra trùng mã SV
+    if(typeVal === "maSV"){
+      let isExist = false;
+      isExist = this.props.mangSV.map((sv) => { 
+        return sv.maSV === value
+       })
+            if (isExist) {
+                // lỗi
+                errorMsg = 'Trùng mã sinh viên'
+            }
+    }
 
     if(typeVal === "email"){
       let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/  ;
@@ -114,36 +127,6 @@ class FormSV extends Component {
 
   }
 
-  findSV = (event) =>{
-   
-    let {name,value} = event.target
-
-    let findSV = {...this.state.find,[name]:value}
-   
-    this.setState({
-      find : findSV
-    })
-
-    console.log("findSV",findSV)
-
-
-    
-  }
-
-  // static getDerivedStateFromProps(newProps, currentState){
-
-  //   console.log("newProps",newProps);
-  //   console.log("currentState",currentState);
-
-  //   if(newProps.sinhVienChiTiet.maSV !== currentState.values.maSV){
-  //     return {
-  //       ...currentState,
-  //       values: newProps.sinhVienChiTiet
-  //     }
-      
-  //   }
-  //   return currentState;
-  // }
 
   componentWillReceiveProps(newProps){
     this.setState({
@@ -154,7 +137,7 @@ class FormSV extends Component {
   render() {
 
     console.log(this.props);
-    let {maSV,hoTen,sdt,email,findSV} = this.state.values;  
+    let {maSV,hoTen,sdt,email} = this.state.values;  
 
     return (
       <div className='py-1'>
@@ -205,18 +188,15 @@ class FormSV extends Component {
            }} className='btn btn-danger'>Cập nhật</button>
         </form>
         <input onChange={(event) => { 
-          this.findSV(event)
-         }} name="timSV" className='mt-5' type="text" placeholder='Nhập mã sinh viên cần tìm kiếm' />
-         <button onClick={() => { 
-           let action = {
-             type: "TIM_MA_SV",
-             timMaSV: this.state.find
-           }
-           this.props.dispatch(action)
-          }} className='btn btn-danger'>Tìm kiếm</button>
+      
+          let action = {
+            type: "TIM_TEN_SV",
+            timTenSV: event.target.value
+          }
+          this.props.dispatch(action)
+         }} name="timSV" className='mt-5' type="text" placeholder='Nhập tên sinh viên cần tìm' />
+        
        
-
-
 
       </div>
     )
@@ -225,7 +205,12 @@ class FormSV extends Component {
 
 const mapStateToProps = (rootReducer) => {
   return {
-    sinhVienChiTiet: rootReducer.QLSVReducer.sinhVienChiTiet
+    mangSV: rootReducer.QLSVReducer.mangSV,
+    sinhVienChiTiet: rootReducer.QLSVReducer.sinhVienChiTiet,
+
+    sinhVienTim: rootReducer.QLSVReducer.sinhVienTim,
+
+
   }
 }
 

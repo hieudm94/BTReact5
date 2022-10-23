@@ -4,6 +4,13 @@ import { connect } from 'react-redux'
 class TableSV extends Component {
 
   renderMangSV = () =>{
+    let mangRender;
+    if(this.props.sinhVienTim == 0){
+      mangRender = this.props.mangSV
+    }  else{
+       mangRender = this.props.sinhVienTim
+    }
+
     return this.props.mangSV.map((sv) => { 
       return <tr key={sv.maSV}>
         <td>{sv.maSV}</td>
@@ -34,7 +41,7 @@ class TableSV extends Component {
   render() {
     return (
       <div>
-        <table class="table">
+        <table className="table">
           <thead>
             <tr className='bg-dark text-white'>
               <th>Mã SV</th>
@@ -55,7 +62,9 @@ class TableSV extends Component {
 
 const mapStateToProps = (rootReducer) => {
   return{
-    mangSV: rootReducer.QLSVReducer.mangSV
+    mangSV: rootReducer.QLSVReducer.mangSV,
+    sinhVienTim: rootReducer.QLSVReducer.sinhVienTim
+    
   }
 }
 
